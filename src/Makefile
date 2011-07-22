@@ -4,7 +4,8 @@
 #      Copyright 2011 Juan I Carrano <juan@superfreak.com.ar>
 #
 
-CFLAGS=-O2 -pedantic -Wall -Wno-variadic-macros -I.. -I/home/juan/source
+OPTIFLAGS = -O2 -march=native
+CFLAGS = $(OPTIFLAGS) -pedantic -Wall -Wno-variadic-macros -I.. -I/home/juan/source
 
 LIBTOOL_COMPILE = libtool --mode=compile --tag=cc $(CC) $(CFLAGS)
 LIBTOOL_LINK = libtool --mode=link --tag=cc $(CC) $(CFLAGS)
