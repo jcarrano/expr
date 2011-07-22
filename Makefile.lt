@@ -36,7 +36,7 @@ LIBTOOL_UNINSTALL = libtool --mode=uninstall rm
 %.lo : %.c ; $(LIBTOOL_COMPILE) -c $< -o $@
 %.la : ; $(LIBTOOL_LINK) -o $@ $^ -rpath $(LIB_PATH) $(ADDITIONAL_LIBS)
 
-.clean : 
+clean : 
 	$(LIBTOOL_CLEAN) $(LIB_NAME)
 	$(LIBTOOL_CLEAN) $(LIB_NAME2)
 	find ./ -name "*.o" -exec rm "{}" \;
@@ -48,6 +48,7 @@ LIBTOOL_UNINSTALL = libtool --mode=uninstall rm
 %.install : %
 	$(LIBTOOL_INSTALL) $* $(LIB_PATH)/$*
 	$(LIBTOOL_FINISH)
+	ldconfig $(LIB_PATH)
 
 %.uninstall :
 	$(LIBTOOL_UNINSTALL) $(LIB_PATH)/$*
