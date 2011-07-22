@@ -20,8 +20,8 @@
  */
 
 #include <malloc.h>
-#include "input.h"
-#include "../lib/common.h"
+#include <input.h>
+#include <libjc/common.h>
 #define MALLOC __MALLOC
 
 char *get_input(struct input ci)

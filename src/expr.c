@@ -21,12 +21,11 @@
 
 #include <stdio.h>
 #include <malloc.h>
-#include "expr.h"
-#include "../lib/common.h"
+#include <expr.h>
+#include <libjc/common.h>
 #ifndef MALLOC
 #define MALLOC __MALLOC
 #endif
-#include "extra-math.h"
 
 /* basic load */
 

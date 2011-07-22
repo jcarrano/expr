@@ -20,11 +20,11 @@
  */
 
 #include <malloc.h>
-#include "../lib/common.h"
-#include "vm.h"
-#include "expr.h"
+#include <libjc/common.h>
+#include <vm.h>
+#include <expr.h>
 
-#include "vm_inlines.c"
+#include <vm_inlines.c>
 
 int expr_eval(struct expr *ex, data_t **ram, data_t *args)
 {

@@ -20,8 +20,8 @@
  */
 
 #include <malloc.h>
-#include "errors.h"
-#include "expr.h"
+#include <errors.h>
+#include <expr.h>
 
 struct compile_error init_ce()
 {

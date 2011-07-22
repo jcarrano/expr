@@ -24,8 +24,8 @@
 #include <limits.h>
 #include <malloc.h>
 
-#include "expr.h"
-#include "compile.h"
+#include <expr.h>
+#include <compile.h>
 
 #define MALLOC __MALLOC
 

@@ -21,15 +21,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/common.h"
+#include <libjc/common.h>
 #define MALLOC __MALLOC
-#include "expr.h"
-#include "compile.h"
-#include "assemble.h"
-#include "vm.h"
-#include "parse.h"
-#include "input.h"
-#include "extra-math.h"
+#include <expr/expr.h>
+#include <expr/compile.h>
+#include <expr/assemble.h>
+#include <expr/vm.h>
+#include <expr/parse.h>
+#include <expr/input.h>
+#include <expr/extra-math.h>
 
 #define EE PERROR
 

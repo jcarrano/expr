@@ -20,9 +20,9 @@
  */
 
 #include <malloc.h>
-#include "../lib/common.h"
+#include <libjc/common.h>
 #define MALLOC __MALLOC
-#include "assemble.h"
+#include <assemble.h>
 
 static struct expr *new_expr(struct objcode *oc)
 {

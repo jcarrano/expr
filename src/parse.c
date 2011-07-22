@@ -21,14 +21,12 @@
 		
 #include <ctype.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <limits.h>
-#include "extra-math.h"
-#include "tipos.h"
-#include "compile.h"
-#include "parse.h"
-#include "../lib/common.h"
+#include <tipos.h>
+#include <compile.h>
+#include <parse.h>
+#include <libjc/common.h>
 #define MALLOC __MALLOC
 
 /*CONSTANTES SIMBOLICAS*/

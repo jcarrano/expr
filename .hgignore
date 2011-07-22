@@ -2,12 +2,15 @@ syntax: glob
 *~
 *.pyc
 *.o
+*.la
+*.lo
 *.gch
 a.out
 *.pfd
 *.elf
 *.test
 *.pdf
+.libs
 
 syntax: regexp
 .*\#.*\#$

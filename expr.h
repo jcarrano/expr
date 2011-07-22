@@ -25,7 +25,7 @@
 /* Public header */
 
 #include "tipos.h"
-#include "chain.h"
+#include <libjc/chain/chain.h>
 
 enum COMPILE_ERRORS {
 	EXPR_OK = E_OK,
