@@ -1,0 +1,55 @@
+#
+#      Makefile
+#      
+#      Copyright 2011 Juan I Carrano <juan@superfreak.com.ar>
+#
+
+#ejemplos
+#
+#objects = vm.lo parse.lo expr.lo assemble.lo compile.lo errors.lo input.lo \
+#		main.lo
+#
+#extra_obj = extra-math.lo main.lo
+#
+#libexpr.la : $(objects)
+#
+#libexpr_x_math.la : $(extra_obj)
+#
+#all: libexpr.la libexpr_x_math.la
+
+# a (re) de
+OPTIFLAGS = 
+LIB_PATH = /usr/local/lib
+ADDITIONAL_LIBS = 
+
+CFLAGS = $(OPTIFLAGS) -pedantic -Wall -Wno-variadic-macros -I.. -I/home/juan/source
+
+LIBTOOL_COMPILE = libtool --mode=compile --tag=cc $(CC) $(CFLAGS)
+LIBTOOL_LINK = libtool --mode=link --tag=cc $(CC) $(CFLAGS)
+LIBTOOL_INSTALL = libtool --mode=install install
+LIBTOOL_CLEAN = libtool --mode=clean rm -f
+
+LIBTOOL_FINISH = libtool finish $(LIB_PATH)
+LIBTOOL_UNINSTALL = libtool --mode=uninstall rm
+
+#redefino reglas implicitas para usar libtool
+%.lo : %.c ; $(LIBTOOL_COMPILE) -c $< -o $@
+%.la : ; $(LIBTOOL_LINK) -o $@ $^ -rpath $(LIB_PATH) $(ADDITIONAL_LIBS)
+
+.clean : 
+	$(LIBTOOL_CLEAN) $(LIB_NAME)
+	$(LIBTOOL_CLEAN) $(LIB_NAME2)
+	find ./ -name "*.o" -exec rm "{}" \;
+	find ./ -name "*.lo" -exec rm "{}" \;
+	
+
+## cuidado! !!!!! ########
+
+%.install : %
+	$(LIBTOOL_INSTALL) $* $(LIB_PATH)/$*
+	$(LIBTOOL_FINISH)
+
+%.uninstall :
+	$(LIBTOOL_UNINSTALL) $(LIB_PATH)/$*
+
+# fin
