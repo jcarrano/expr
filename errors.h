@@ -49,15 +49,23 @@ EXPR_FEWVALUES 		=>  	n: number of values
 EXPR_FEWARGS		=>	fname: name of function, n: n_args of function,
 				m: args provided
 EXPR_NOSYM		=> 	undefined symbol
-EXPR_EXPECTING_INT 	=>	fname: copy of offending string
+EXPR_EXPECTING_INT 	=>	
 EXPR_EXPECTING_VALUE	=>	fname: copy of offending string
 EXPR_EXPECTING_VAR
 EXPR_NOSUCH_VAR		=>	fname: copy of unidentified string
 EXPR_ARG_OORANGE	=>	n: argument number which is out of range.
+EXPR_UNEXPECTED_INT     =>     	n: integer
 */
 
 extern struct compile_error init_ce();
 	/* Called internally by parse()-like functions to initialize */
+
+extern char *ce_to_str(struct compile_error ce, int include_locinfo, int dual_line);
+	/* Return a human-readable description of the error.
+	 * The caller must free() the returned string
+	 * Return NULL on error
+	 * include_loconfo: include location of the error
+	 * dual line: separate location and description by a newline  */
 
 extern void destroy_ce(struct compile_error *ce);
 	/* must be called by users after parse()-like functions, to free any 

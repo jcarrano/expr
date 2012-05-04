@@ -33,30 +33,31 @@ enum COMPILE_ERRORS {
 	EXPR_FEWVALUES,
 	EXPR_FEWARGS,
 	EXPR_NOSYM,
-	EXPR_UNEXPECTED_INT,
+	EXPR_EXPECTING_INT,
 	EXPR_EXPECTING_VALUE,
 	EXPR_EXPECTING_VAR,
 	EXPR_NOSUCH_VAR,
 	EXPR_ARG_OORANGE,
-	EXPR_UNKNOWN_ERR /* = 16 */
+	EXPR_UNKNOWN_ERR, /* = 16 ???*/
 };
 
 struct expr_func {
-	char *nombre; /*nombre de la funcion*/
-	char n_args; /*numero de argumentos que toma. ceros si es constante, -n si es una variable*/
-	char n_rets; /*número de args que devuelve*/
-	int reentrant; /* 1 si la fción es reentrante */
-	void ( *f)(data_t *); /* puntero a la función */
+	char *name; /*function identifier*/
+	char n_args; /* number of input arguments*/
+	char n_rets; /* number of return arguments*/
+	int reentrant; /* 1 if the function depends only on its inputs and has 
+							no side effects*/
+	void ( *f)(data_t *); /* pointer to the funcion */
 };
 
 struct expr_const {
-	char *nombre;
-	data_t valor;
+	char *name;
+	data_t value;
 };
 
 struct expr_var {
-	char *nombre;
-	data_t *location; /* puntero a algún lugar para almacenar la variable */
+	char *name;
+	data_t *location;
 };
 
 struct expr_environ {

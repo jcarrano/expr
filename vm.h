@@ -58,7 +58,7 @@ struct expr {
 extern int expr_eval(struct expr *ex, data_t **ram, data_t *args);
 
 #define _VMC_IS_HEADER
-#include "vm_inlines.c"
+#include "vm_inlines.h"
 #undef _VMC_IS_HEADER
 
 #endif /* _VM_H_ */

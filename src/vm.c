@@ -24,7 +24,7 @@
 #include <vm.h>
 #include <expr.h>
 
-#include <vm_inlines.c>
+#include <vm_inlines.h>
 
 int expr_eval(struct expr *ex, data_t **ram, data_t *args)
 {

@@ -1,5 +1,5 @@
 /*
- *      vm_inlines.c
+ *      vm_inlines.h
  *      
  *      Copyright 2011 Juan I Carrano <juan@superfreak.com.ar>
  *      

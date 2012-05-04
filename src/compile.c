@@ -184,7 +184,7 @@ int inject_fn(struct proto_obj *po, struct expr_func *fn)
 			POSS(BL_FUNC, func, fn)
 		} else {
 			po->status = -EXPR_FEWARGS;
-			po->report.fname = fn->nombre;
+			po->report.fname = fn->name;
 			po->report.takes = fn->n_args;
 			po->report.have = po->val_count;
 		}
@@ -286,7 +286,7 @@ int inject_globalvar_set(struct proto_obj *po, struct expr_var *ev)
 			POSS(BL_GVAR_ST, gvar, ev)
 		} else {
 			po->status = -EXPR_FEWARGS;
-			po->report.fname = ev->nombre;
+			po->report.fname = ev->name;
 			po->report.have = po->val_count;
 			po->report.takes = 1;
 		}

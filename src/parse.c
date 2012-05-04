@@ -150,7 +150,7 @@ static void * str_lookup(int (*match)(void *, char *), struct chain *ch,
 static int _fn_cmp(void *_fcion, char *str)
 {
 	struct expr_func *fcion = (struct expr_func*)_fcion;
-	return strcmp(fcion->nombre, str);
+	return strcmp(fcion->name, str);
 }
 
 static struct expr_func *strtoFun(struct expr_environ *env, char str[]) {
@@ -160,7 +160,7 @@ static struct expr_func *strtoFun(struct expr_environ *env, char str[]) {
 static int _ct_cmp(void *_ct, char *str)
 {
 	struct expr_const *ct = (struct expr_const*)_ct;
-	return strcmp(ct->nombre, str);
+	return strcmp(ct->name, str);
 }
 
 static struct expr_const *strtoConst(struct expr_environ *env, char str[]) {
@@ -170,7 +170,7 @@ static struct expr_const *strtoConst(struct expr_environ *env, char str[]) {
 static int _var_cmp(void *_var, char *str)
 {
 	struct expr_var *ct = (struct expr_var*)_var;
-	return strcmp(ct->nombre, str);
+	return strcmp(ct->name, str);
 }
 
 static struct expr_var *strtoVar(struct chain *table, char str[]) {
@@ -250,7 +250,7 @@ static void destroy_locals(struct chain *locals)
 	}
 }
 
-struct compile_error parse(struct input ci, struct expr_environ *env,
+struct compile_error expr_parse(struct input ci, struct expr_environ *env,
 			     struct parse_options opts, struct objcode **ocode)
 {
 	struct compile_error ret;
@@ -281,15 +281,16 @@ struct compile_error parse(struct input ci, struct expr_environ *env,
 				atodata_load(startptr, &end_ptr, &tmp_data)){
 			error = inject_data(&outp, tmp_data);
 			prev_stat = NADA;
-		} else if (atoint_load(startptr, &end_ptr, &tmp_int)) {
-			if (prev_stat == ARG)
-				error = inject_arg(&outp, tmp_int);
-			else if (prev_stat == NCLEAR)
-				error = inject_nclear(&outp, tmp_int);	
-			else
-				error = -EXPR_UNEXPECTED_INT;
-			
-                        prev_stat = NADA;
+		} else if (prev_stat == ARG || prev_stat == NCLEAR) {
+			if (atoint_load(startptr, &end_ptr, &tmp_int)) {
+				if (prev_stat == ARG)
+					error = inject_arg(&outp, tmp_int);
+				else
+					error = inject_nclear(&outp, tmp_int);	
+			} else {
+				error = -EXPR_EXPECTING_INT;
+			}
+			prev_stat = NADA;
 		} else if (loadtok(&ident, startptr, &end_ptr)) {
 			int l_index;
 			struct expr_var *tmp_var;

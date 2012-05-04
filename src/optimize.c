@@ -1,5 +1,5 @@
 /*
- *      parse.h
+ *      optimize.c
  *      
  *      Copyright 2011 Juan I Carrano <juan@superfreak.com.ar>
  *      
@@ -18,22 +18,30 @@
  *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *      MA 02110-1301, USA.
  */
- 
-#ifndef _PARSE_H_
 
-#include "expr.h"
-#include "errors.h"
-#include "input.h"
-
-struct parse_options {
-	int auto_clear : 1;
-	int n_args; /*Máxima cantidad de argumentos posicionales que pide la expresión */
-	int n_rets; /* Cantidad de valores que deve devolver la expr */
-};
-
-extern struct compile_error expr_parse(struct input ci, struct expr_environ *env,
-			struct parse_options opts, struct objcode **ocode);
-
-#define _PARSE_H_
-#endif /* _PARSE_H_ */
- 
+int optimize(struct objcode *oc)
+{
+	struct ch_iterator chi = ch_iter(oc->program), chi0, chi1;
+	int v_count = 0, max_mem = 0, n, to_cut = 0;
+	struct cblock *cb;
+	
+	while (!(n = ch_next(&chi, &cb))) {
+		if (cb->type == BL_DATA || cb->type == BL_CONS) {
+			if (v_count == 0)
+				chi0 = ch_cloneiter(chi);
+			v_count++;
+			to_cut++;
+		} else if (cb->type == BL_FUNC
+			  && (cb->data->func->reentrant)
+			  && v_count >= data->func->n_args) {
+				to_cut++;
+				v_count += data->func->n_rets - 
+							   data->func->n_args;
+				chi1 = ch_cloneiter(chi);
+		} else {
+			assemble_n_novars(chi0, to_cut);
+			ar_to_ocode( ... v_count);
+			v_count = 0;
+		}
+	}
+}

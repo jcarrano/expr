@@ -26,7 +26,7 @@ int load_builtins(struct expr_environ *env)
 	return ret;
 }
 
-#define F_HEADER(nombre) static void nombre (data_t *sp)
+#define F_HEADER(name) static void name (data_t *sp)
 
 #ifdef COMPLEX_SUPPORT
 #define CW(f) c##f
@@ -39,11 +39,13 @@ int load_builtins(struct expr_environ *env)
 #define a sp[-2]
 
 #define _lo_RET(n_args, i) sp[-(n_args) + (i)]
-#define RET(x, n_args, i) (_lo_RET(x, (n_args), (i)) = (x))
-	/* usar este macro para devolver el i-esimo argumento de una función
-	 * que toma n_args. IMPORTANTE al devolver el í-esimo elemento se
-	 * DESTRUYE el (n_args + i)-ésimo argumento
-	 * (i) empieza a contar desde CERO	*/
+#define RET(x, n_args, i) (_lo_RET((n_args), (i)) = (x))
+	/* Use this macro to generate the i-th return value from a function
+	 * taking n_arg arguments.
+	 * Warning: when writing the i return value, the (n_args+i) input
+	 * argument is overwritten.
+	 * i starts from 0
+	 */
 #define RET21 _lo_RET(2, 0) =
 #define RET11 _lo_RET(1, 0) =
 
@@ -120,6 +122,12 @@ F_HEADER(x_ln){ /*logaritmo natural de a*/
 F_HEADER(x_log){ /*logaritmo en base b de a */
 	RET21 CW(log)(a)/CW(log)(b);
 }
+F_HEADER(rpolar){ /*rectangular coordinates to polar */
+	data_t r;
+	r = hypot(a, b);
+	RET(atan(b/a), 2, 1);
+	RET(r, 2, 0);
+}
 #ifdef COMPLEX_SUPPORT
 F_HEADER(re){ /*logaritmo en base b de a */
 	RET11 CW(real)(u);
@@ -143,6 +151,7 @@ F_HEADER(x_arg){
 #undef u
 
 #define F21(sym, fp) {(sym), 2, 1, 1, (fp)} /*para funciones puras f: K^2 -> K */
+#define F22(sym, fp) {(sym), 2, 2, 1, (fp)} /*K^2 -> K^2 */
 #define F11(sym, fp) {(sym), 1, 1, 1, (fp)} /*para funciones puras f: K -> K */
 
 const struct expr_func f_dict[] = { 
@@ -155,7 +164,7 @@ const struct expr_func f_dict[] = {
 	F11("sq",	sq	),
 	F21("rt",	rt	),
 	F11("exp",	x_exp	),
-	F11("sen",	x_sen	),
+	F11("sin",	x_sen	),
 	F11("cos",	x_cos	),
 	F11("tg",	x_tan	),
 	F11("sh",	x_senh	),
@@ -169,7 +178,9 @@ const struct expr_func f_dict[] = {
 	F11("ath",	arcth	),
 	F11("ln",	x_ln	),
 	F21("log",	x_log	), /*20 elementos*/
-#ifdef COMPLEX_SUPPORT
+#ifndef COMPLEX_SUPPORT 
+	F22("rpolar",	rpolar	),
+#else
 	F11("re",	re ),
 	F11("im",	im ),
 	F11("conj",	x_conj ),
@@ -184,6 +195,7 @@ const struct expr_const ctes[] = {
 	{ "phi", 1.618033988749894848204586834365},
 #ifdef COMPLEX_SUPPORT
 	{ "i", I }
+	{ "1i", I }
 #endif
 };
 

@@ -40,8 +40,24 @@ extern int get_lineno(struct input ci);
 extern struct input mk_input(char *(*input)(void *), int (*lineno)(void *), 
 								void *cdata);
 
+/* simple file input. Based on getline(3) */
+
 extern int mk_fileinput(struct input *ci, FILE *fp);
 
 extern void destroy_fileinput(struct input *ci);
+
+/* Line by line "interactive" input */
+
+extern int mk_lineinput(struct input *ci, FILE *fp);
+
+extern void destroy_lineinput(struct input *ci);
+
+extern int linput_prefetch(struct input ci);
+	/* Call this at the beginning of each line
+	 * Returns true if the line contained something
+	 */
+
+extern int linput_done(struct input ci);
+	/* Returns true if the end of file was reached */
 
 #endif /* _INPUT_H_ */

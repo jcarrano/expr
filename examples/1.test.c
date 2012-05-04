@@ -44,7 +44,7 @@ int tester(int n_arg, int n_ret, data_t *args)
 	struct expr_var v1;
 	data_t data1 = 45;
 	
-	v1.nombre = "var1";
+	v1.name = "var1";
 	v1.location = &data1;
 	
 	po.auto_clear = 0;
@@ -55,7 +55,7 @@ int tester(int n_arg, int n_ret, data_t *args)
 	load_builtins(env);
 	var_load(env, &v1);
 	
-	ce = parse(inp, env, po, &oc);
+	ce = expr_parse(inp, env, po, &oc);
 	if (ce.type == -E_OK) {
 		struct expr *ex;
 		

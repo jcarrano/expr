@@ -20,9 +20,11 @@
 # a (re) de
 OPTIFLAGS = 
 LIB_PATH = /usr/local/lib
+INCLUDE_PATH = /usr/local/include
 ADDITIONAL_LIBS = 
 
-CFLAGS = $(OPTIFLAGS) -pedantic -Wall -Wno-variadic-macros -I.. -I/home/juan/source
+CFLAGS = $(OPTIFLAGS) -pedantic -Wall -Wno-variadic-macros -I.. \
+			-I$(INCLUDE_PATH)
 
 LIBTOOL_COMPILE = libtool --mode=compile --tag=cc $(CC) $(CFLAGS)
 LIBTOOL_LINK = libtool --mode=link --tag=cc $(CC) $(CFLAGS)

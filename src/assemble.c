@@ -77,7 +77,7 @@ struct expr *expr_assemble(struct objcode *oc)
 				break;
 			case BL_CONS:
 				op.type = OC_DATA_LOAD;
-				op.load.value = cb->data.cons->valor;
+				op.load.value = cb->data.cons->value;
 				break;
 			case BL_DATA:
 				op.type = OC_DATA_LOAD;
