@@ -40,6 +40,20 @@ extern int get_lineno(struct input ci);
 extern struct input mk_input(char *(*input)(void *), int (*lineno)(void *), 
 								void *cdata);
 
+/* simple string input */
+
+enum {STRINP_NOCOPY, STRINP_COPY};
+
+extern int mk_strinput(struct input *ci, char *s, int make_copy);
+	/* make_copy = STRINP_NOCOPY or STRINP_COPY
+	 * Specifies whether to copy the string s, or to store a pointer.
+	 */
+
+extern void destroy_strinput(struct input *ci);
+	/* If STRINP_COPY was selected in mk_strinput, this funcion frees the
+	 * memory used by the copied string
+	 */
+
 /* simple file input. Based on getline(3) */
 
 extern int mk_fileinput(struct input *ci, FILE *fp);

@@ -48,6 +48,14 @@ struct input mk_input(char *(*input)(void *), int (*lineno)(void *),
 	return ni;
 }
 
+/*	*	*	Common funcions		*	*	*	*/
+
+static int unknown_lineno(void *_data)
+{
+	return UNKN_LINE;
+}
+
+
 /*	*	* 	SIMPLE FILE INPUT 	*	*	*	*/
 
 struct _lrdata {
@@ -118,10 +126,7 @@ struct _lineinput {
 	struct input fi;
 };
 
-static int _linput_lineno(void *_data)
-{
-	return UNKN_LINE;
-}
+#define _linput_lineno unknown_lineno
 
 static char *_linput_fetch(void *_data)
 {
@@ -190,9 +195,7 @@ int mk_lineinput(struct input *ci, FILE *fp)
 		li->donefile = 0;
 		li->L = NULL;
 		
-		ci->input = _linput_read;
-		ci->lineno = _linput_lineno;
-		ci->cdata = li;
+		*ci = mk_input(_linput_read, _linput_lineno, li);
 	} else {
 		if (li != NULL)
 			destroy_fileinput(&li->fi);
@@ -208,5 +211,62 @@ void destroy_lineinput(struct input *ci)
 		destroy_fileinput(&((struct _lineinput *)ci->cdata)->fi);
 		free(ci->cdata);
 		ci->cdata = NULL;
+	}
+}
+
+/*	*	*	String Input	*	*	*	*/
+
+struct _strinput {
+	char *s;
+	int used;
+	int is_copy;
+};
+
+static char *_strinput_read(void *_data)
+{
+	struct _strinput *data = (struct _strinput*)_data;
+	char *s;
+	
+	if (!data->used) {
+		s = data->s;
+		data->used = 1;
+	} else {
+		s = NULL;
+	}
+	
+	return s;
+}
+
+#define _strinput_lineno unknown_lineno
+
+int mk_strinput(struct input *ci, char *s, int make_copy)
+{
+	struct _strinput *si = NULL;
+	int r = -E_NOMEM;
+	
+	if (MALLOC(si) != NULL) {
+		si->is_copy = (make_copy == STRINP_COPY);
+		if (si->is_copy) {
+			if ((si->s = strdup(s)) == NULL) {
+				free(si);
+				goto mk_strinput_error;
+			}
+		} else {
+			si->s = s;
+		}
+		si->used = 0;
+		*ci = mk_input(_strinput_read, _strinput_lineno, si);
+	}
+mk_strinput_error:
+	return r;
+}
+
+void destroy_strinput(struct input *ci)
+{
+	if (ci->cdata != NULL) {
+		struct _strinput *data = (struct _strinput*)(ci->cdata);
+		if (data->is_copy)
+			free(data->s);
+		free(ci->cdata);
 	}
 }

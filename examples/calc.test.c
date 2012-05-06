@@ -146,7 +146,52 @@ rectint_error:
 	return ans;
 }
 
-void uiloop(data_t a, data_t b, int nsteps)
+void eval_print(data_t a, data_t b, int nsteps, struct parse_options po,
+		struct expr_environ *env, struct input inp, data_t *ans_data)
+{
+	struct objcode *oc;
+	struct compile_error ce;
+	
+	ce = expr_parse(inp, env, po, &oc);
+	
+	if (ce.type == -E_OK) {
+		struct expr *ex;
+		
+		if ((ex = expr_assemble(oc)) != NULL) {
+			data_t *rets = NULL;
+			int r;
+			
+			if (!nsteps) {
+				r = expr_eval(ex, &rets, NULL);
+				if (r == -E_OK) {
+					*ans_data = expr_get_ret(rets, 0);
+				} else {
+					EE("Eval failed\n");
+				}
+				free(rets);
+			} else {
+				*ans_data = rect_int(a, b, nsteps, ex);
+			}
+			printf("%g ;", *ans_data);
+			putchar('\n');
+			
+			destroy_expr(ex);
+		} else {
+			EE("Assembly failed\n");
+		}
+		destroy_oc(oc);
+	} else {
+		char *s;
+		s = ce_to_str(ce,1,1);
+		fputs(s, stderr);
+		fputc('\n', stderr);
+		free(s);
+	}
+	
+	destroy_ce(&ce);
+}
+
+void uiloop(data_t a, data_t b, int nsteps, char *s)
 {
 	int done = 0;
 	struct input inp;
@@ -166,82 +211,54 @@ void uiloop(data_t a, data_t b, int nsteps)
 	load_builtins(env);
 	func_multiload(env, local_funcs, ARSIZE(local_funcs));
 
-	
-	mk_lineinput(&inp, stdin);
-	
 	/*Parser options*/
 	po.auto_clear = 0;
 	po.n_args = (nsteps != 0);
 	po.n_rets = CALC_N_RETS;
 	
-	while(!done && !linput_done(inp) && !Gdone) {
-		fputs("> ", stderr);
-		if (linput_prefetch(inp)) {
-			struct objcode *oc;
-			struct compile_error ce;
-			
-			ce = expr_parse(inp, env, po, &oc);
-			
-			if (ce.type == -E_OK) {
-				struct expr *ex;
-				
-				if ((ex = expr_assemble(oc)) != NULL) {
-					data_t *rets = NULL;
-					int r;
-					
-					if (!nsteps) {
-						r = expr_eval(ex, &rets, NULL);
-						if (r == -E_OK) {
-							ans_data = expr_get_ret(rets, 0);
-						} else {
-							EE("Eval failed\n");
-						}
-						free(rets);
-					} else {
-						ans_data = rect_int(a, b, nsteps, ex);
-					}
-					printf("%g ;", ans_data);
-					putchar('\n');
-					
-					destroy_expr(ex);
-				} else {
-					EE("Assembly failed\n");
-				}
-				destroy_oc(oc);
-			} else {
-				char *s;
-				s = ce_to_str(ce,1,1);
-				fputs(s, stderr);
-				fputc('\n', stderr);
-				free(s);
+	if (s == NULL) {
+		mk_lineinput(&inp, stdin);
+		
+		while(!done && !linput_done(inp) && !Gdone) {
+			fputs("> ", stderr);
+			if (linput_prefetch(inp)) {
+				eval_print(a, b, nsteps, po, env, inp, &ans_data);
 			}
-			
-			destroy_ce(&ce);
 		}
+		
+		destroy_lineinput(&inp);
+	} else {
+		mk_strinput(&inp, s, STRINP_NOCOPY);
+		eval_print(a, b, nsteps, po, env, inp, &ans_data);
+		destroy_strinput(&inp);
 	}
 	
 	destroy_env(env);
-	destroy_lineinput(&inp);
 }
 
 int main(int argc, char *argv[])
 {
 	int nsteps = 0;
 	data_t a = 0, b = 0;
+	char *s = NULL;
 	
-	if (argc != 1 && argc != 4) {
+	if (argc != 1 && argc != 2 && argc != 4 && argc != 5) {
 		EE("Usage:\n");
 		EE("To integrate each expression between a and b:"
 						"%s a b nsteps\n", argv[0]);
 		EE("If called without arguments it is a calculator\n");
 		return 1;
-	} else if (argc == 4) {
+	} else if (argc >= 4) {
 		a = strtod(argv[1], NULL);
 		b = strtod(argv[2], NULL);
 		nsteps = strtol(argv[3], NULL, 0);
+		if (argc == 5)
+			s = argv[4];
+	} else if (argc == 2) {
+		s = argv[1];
 	}
-		
-	uiloop(a, b, nsteps);
+	
+	uiloop(a, b, nsteps, s);
 	
 	return 0;
 }
