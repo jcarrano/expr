@@ -18,7 +18,7 @@
 #all: libexpr.la libexpr_x_math.la
 
 # a (re) de
-OPTIFLAGS = 
+OPTIFLAGS = -O2 -ffast-math -march=native
 LIB_PATH = /usr/local/lib
 INCLUDE_PATH = /usr/local/include
 ADDITIONAL_LIBS = 

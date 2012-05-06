@@ -118,7 +118,35 @@ struct expr_func local_funcs[] = {
 	{"author", 0, 1, 0, do_author},
 };
 
-void uiloop(data_t *args, int n_args)
+extern data_t eval(const data_t x, struct opcode bcode[], data_t ram[], int size);
+
+#define EVAL(x) (expr_eval(ex, &ram, (x)))
+#define GETRET(n) (expr_get_ret(ram, n))
+
+data_t rect_int(data_t a, data_t b, int iter, struct expr *ex) {
+	data_t step, x[1] = {0}, ans=0, *ram = NULL;
+	int itercount;
+	
+	step=(b-a)/iter;
+	for(*x=a, itercount=0; itercount<iter; itercount++){
+		*x+=step;
+		if (EVAL(x) < 0) {
+			ans = NAN;
+			goto rectint_error;
+		} else {
+			ans+=GETRET(0)*step;
+		}
+	}
+	step=b-*x;
+	EVAL(x);
+	ans+=EVAL(x)*step;
+	
+rectint_error:
+	free(ram);
+	return ans;
+}
+
+void uiloop(data_t a, data_t b, int nsteps)
 {
 	int done = 0;
 	struct input inp;
@@ -143,7 +171,7 @@ void uiloop(data_t *args, int n_args)
 	
 	/*Parser options*/
 	po.auto_clear = 0;
-	po.n_args = n_args;
+	po.n_args = (nsteps != 0);
 	po.n_rets = CALC_N_RETS;
 	
 	while(!done && !linput_done(inp) && !Gdone) {
@@ -161,19 +189,20 @@ void uiloop(data_t *args, int n_args)
 					data_t *rets = NULL;
 					int r;
 					
-					r = expr_eval(ex, &rets, args);
-					if (r == -E_OK) {
-						int i;
-						
-						for (i = 0; i < CALC_N_RETS; i++)
-							ans_data = expr_get_ret(rets, i);
-							printf("%f ;", ans_data);
-						putchar('\n');
+					if (!nsteps) {
+						r = expr_eval(ex, &rets, NULL);
+						if (r == -E_OK) {
+							ans_data = expr_get_ret(rets, 0);
+						} else {
+							EE("Eval failed\n");
+						}
+						free(rets);
 					} else {
-						EE("Eval failed\n");
+						ans_data = rect_int(a, b, nsteps, ex);
 					}
+					printf("%g ;", ans_data);
+					putchar('\n');
 					
-					free(rets);
 					destroy_expr(ex);
 				} else {
 					EE("Assembly failed\n");
@@ -197,26 +226,23 @@ void uiloop(data_t *args, int n_args)
 
 int main(int argc, char *argv[])
 {
-	int r;
-	data_t *args = 0;
+	int nsteps = 0;
+	data_t a = 0, b = 0;
 	
-	
-	if (argc > 1 && NMALLOC(args, argc-1) == NULL) {
-		EE("Insufficient memory\n");
-		r = 1;
-	} else {	
-		int i;
-		
-		for (i = 1; i < argc; i++) {
-			args[i-1] = strtod(argv[i], NULL);
-		}
-		
-		uiloop(args, i-1);
-		
-		free(args);
-		r = 0;
+	if (argc != 1 && argc != 4) {
+		EE("Usage:\n");
+		EE("To integrate each expression between a and b:"
+						"%s a b nsteps\n", argv[0]);
+		EE("If called without arguments it is a calculator\n");
+		return 1;
+	} else if (argc == 4) {
+		a = strtod(argv[1], NULL);
+		b = strtod(argv[2], NULL);
+		nsteps = strtol(argv[3], NULL, 0);
 	}
+		
+	uiloop(a, b, nsteps);
 	
-	return r;
+	return 0;
 }
 

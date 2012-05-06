@@ -122,13 +122,14 @@ char *ce_to_str(struct compile_error ce, int include_locinfo, int dual_line)
 		s3 = serr;
 		
 		if (asprintf(&sret, "%s%s%s%s%s", s0, s1, s2, ssep, s3)<=0) {
-ce2str_err:
-			free(sloc1);
-			free(sloc2);
-			free(serr);
 			free(sret);
 			sret = NULL;
 		}
+ce2str_err:
+		free(sloc1);
+		free(sloc2);
+		free(serr);
+		
 	}
 	
 	return sret;
