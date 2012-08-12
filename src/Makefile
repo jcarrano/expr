@@ -8,7 +8,7 @@ all : libexpr.la libexpr_x_math.la
 
 include ../Makefile.lt
 
-OPTIFLAGS = -O2 -march=native
+#OPTIFLAGS = -O2 -march=native
 ADDITIONAL_LIBS = -lm -lchain
 
 objects = vm.lo parse.lo expr.lo assemble.lo compile.lo errors.lo input.lo

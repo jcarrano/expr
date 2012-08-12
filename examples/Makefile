@@ -1,4 +1,4 @@
-CFLAGS=-I/home/juan/source -O2 -Wall -pedantic
+CFLAGS=-O2 -Wall -pedantic
 
 LDFLAGS= -lexpr -lexpr_x_math
 

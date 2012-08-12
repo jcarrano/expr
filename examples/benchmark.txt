@@ -1,0 +1,44 @@
+integrar desde 1 100
+exp(sin(x) * 0.1 + 1) - cos(x)
+
+rint:
+100000000 iteraciones ( 10^8 )
+x sen 0.1 * 1 + exp x cos -
+
+@2.13 GHz ( 2.13 * 10 ^ 9 )
+21.3 s total -> 10^8/21.3 = 4694835.681 (4.69 * 10 ^ 6) calculos x seg
+(2.13 * 10 ^ 9)*(21.3) / 10^8 = 453.7 ciclos de máquina por cálculo
+
+expr:
+
+10^8 iteraciones (100000000)
+$ 0 sin 0.1 * 1 + exp $ 0 cos -
+
+22.6 s total -> 4.42 * 10 ^ 6
+(2.13 * 10 ^ 9)*(22.6) / 10^8 = 481 ciclos de máquina por cálculo
+
+expr, linkeado estáticamente con libexpr.a, libexpr_x_math.a:
+
+10^8 iteraciones (100000000)
+$ 0 sin 0.1 * 1 + exp $ 0 cos -
+
+Muy variable
+min: 21.603, max: 22.201
+
+para 21.7s
+(4.6 * 10 ^ 6) cálculos x seg
+462 ciclos x cálculo
+
+native implementation:
+no optimization:
+100000000 iterations (10^8)
+15.584 s -> (6.417 * 10^ 6) calculos x seg
+(2.13 * 10 ^ 9)*(15.584) / 10^8 = 332 ciclos de máquina por cálculo
+
+optimization: -O2 -march=native -ffast-math (u -Os)
+100000000 iterations (10^8)
+10.2 s -> (9.8 * 10 ^ 6) calculos x seg
+(2.13 * 10 ^ 9)*(10.2) / 10^8 = 217.26 ciclos de máquina por cálculo
+
+ultrafast c implementation
+mismo que el de arriba
