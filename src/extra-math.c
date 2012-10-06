@@ -74,6 +74,12 @@ F_HEADER(x_exp){ /* e a la a*/
 F_HEADER(x_pow){ /* a elevado a la b*/
 	RET21 CW(pow)(a, b);
 }
+F_HEADER(x_pow2){ /* a elevado a la b*/
+	RET11 u*u;
+}
+F_HEADER(x_pow3){ /* a elevado a la b*/
+	RET11 u*u*u;
+}
 F_HEADER(sq){
 	RET11 CW(sqrt)(u);
 }
@@ -161,6 +167,8 @@ const struct expr_func f_dict[] = {
 	F21("/",	x_div	),
 	F11("abs",	x_abs	),
 	F21("^",	x_pow	),
+	F11("^2",	x_pow2	),
+	F11("^3",	x_pow3	),
 	F11("sq",	sq	),
 	F21("rt",	rt	),
 	F11("exp",	x_exp	),

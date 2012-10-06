@@ -19,8 +19,8 @@
  *      MA 02110-1301, USA.
  */
 
-#ifndef _INPUT_H_
-#define _INPUT_H_
+#ifndef _EXPR_INPUT_H_
+#define _EXPR_INPUT_H_
 /* Public header */
 
 #include <stdio.h>
@@ -74,4 +74,4 @@ extern int linput_prefetch(struct input ci);
 extern int linput_done(struct input ci);
 	/* Returns true if the end of file was reached */
 
-#endif /* _INPUT_H_ */
+#endif /* _EXPR_INPUT_H_ */

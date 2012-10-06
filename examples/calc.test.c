@@ -114,7 +114,7 @@ struct expr_func local_funcs[] = {
 	{"help", 0, 1, 0, print_help},
 	{"quit", 0, 1, 0, do_quit},
 	{"exit", 0, 1, 0, do_quit},
-	{"exit", 0, 1, 0, do_quit},
+	{"bye", 0, 1, 0, do_quit},
 	{"author", 0, 1, 0, do_author},
 };
 
