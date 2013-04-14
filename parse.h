@@ -26,9 +26,10 @@
 #include "input.h"
 
 struct parse_options {
-	int auto_clear : 1;
-	int n_args; /*Máxima cantidad de argumentos posicionales que pide la expresión */
-	int n_rets; /* Cantidad de valores que deve devolver la expr */
+	int auto_clear : 1; /* auto_clear = 1 means to ignore excess values 
+			returned, instead of reporting an error*/
+	int n_args; /*Number of positional arguments */
+	int n_rets; /* Number of values the expression MUST return */
 };
 
 extern struct compile_error expr_parse(struct input ci, struct expr_environ *env,

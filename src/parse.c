@@ -72,7 +72,7 @@ struct local_var {
 struct compile_error parse(struct input ci, struct expr_environ *env,
 			struct parse_options opts, struct objcode **ocode);
 
-/*GLOBALES*/
+/*GLOBALS*/
 
 static int N_able(x) {
 	return isfinite(x) && (x < INT_MAX) && (x >= 0);

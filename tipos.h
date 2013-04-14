@@ -1,5 +1,5 @@
 /*
- *      Tipos comunes
+ *      Common types
  */
 #ifndef _TIPOS_H_
 #define _TIPOS_H_
