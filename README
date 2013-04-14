@@ -65,7 +65,7 @@ error to reference a local variable before assignment.
 To reference a variable just spell it's name. The same applies to a function.
 Variable names can mask function names, so be careful.
 The operator ';' completely clears the stack. 'clear n' clears n positions. n
-must be constant. For example '6 4 7 clear n +' gives 4.
+must be constant. For example '6 4 7 clear 1 +' gives 4.
 
 * Test it!
 
